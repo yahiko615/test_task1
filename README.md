@@ -5,7 +5,7 @@ automated testing of online stores.
 
 ## Installation
 
-Для установки проекта, выполните следующие шаги:
+To install the project, follow these steps:
 
 1. Clone the repository using Git:
 
