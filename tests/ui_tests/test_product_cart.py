@@ -8,7 +8,7 @@ from page_objects.main_page_pack.main_page import MainPage
 @allure.feature('Product Cart Feature')
 # @pytest.mark.headless
 # сделал тест флаки потому что пришлось добавить time.sleep-ы из-за трудноотслеживаемого лоадинга
-# который без вейтеров вызывает ElementClickInterceptedException
+# который без time.sleep-ов вызывает ElementClickInterceptedException
 @flaky(max_runs=3, min_passes=1)
 def test_adding_product_to_cart_valid_data(create_driver_product_cart, env):
     """
