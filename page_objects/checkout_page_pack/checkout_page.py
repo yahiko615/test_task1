@@ -141,12 +141,12 @@ class CheckoutPage(BasePage):
         Returns:
         - self: The current instance for method chaining.
         """
-
-        self.wait_for_element_clickable_and_click(self.__issuing_office_select)
         # wait for results shown
         time.sleep(3)
+        self.wait_for_element_clickable_and_click(self.__issuing_office_select)
         self.send_keys(self.__select_input, text)
-
+        # wait for results shown
+        time.sleep(3)
         self.press_backspace()
         # wait for results shown
         time.sleep(3)
