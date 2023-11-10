@@ -1,4 +1,3 @@
-import inspect
 import json
 import os
 from contextlib import suppress
@@ -11,28 +10,6 @@ from selenium.webdriver.chrome.options import Options
 from utilities.driver_factory import create_driver_factory
 
 _screenshot_path = Path.home().joinpath("Downloads")
-
-
-def auto_step(cls):
-    """
-     The auto_step decorator is designed to automatically wrap class methods in Allure report steps.
-
-     Parameters:
-     - cls: The class whose methods will be automatically wrapped in Allure steps.
-
-     Returns:
-     - Returns the class with methods wrapped in Allure steps.
-
-     Note:
-     - Methods whose names start with an underscore (_) are not wrapped in Allure steps.
-
-     Caution:
-     - When using this decorator, make sure you have the necessary libraries installed, such as allure-pytest and pytest.
-     """
-    for name, method in inspect.getmembers(cls, inspect.isfunction):
-        if not name.startswith('_'):
-            setattr(cls, name, allure.step(method))
-    return cls
 
 
 @pytest.fixture(scope="session", autouse=True)

@@ -1,4 +1,6 @@
-from selenium.common import TimeoutException, NoSuchElementException
+import time
+
+from selenium.common import TimeoutException, NoSuchElementException, ElementClickInterceptedException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
@@ -13,29 +15,6 @@ class BasePage:
     Attributes:
     - _driver: The WebDriver instance for interacting with the web page.
     - _wait: WebDriverWait instance for explicit waits.
-
-    Methods:
-    - __init__: Constructor method to initialize the BasePage instance.
-    - __wait_until_element_visible: Private method to wait until an element becomes visible.
-    - __wait_until_element_invisible: Private method to wait until an element becomes invisible.
-    - __wait_until_element_present: Private method to wait until an element is present.
-    - __wait_until_element_clickable: Private method to wait until an element becomes clickable.
-    - send_keys: Enters text into an input field identified by the given locator.
-    - press_enter: Presses the 'Enter' key on the active element.
-    - press_backspace: Presses the 'Backspace' key on the active element.
-    - click: Clicks on the element identified by the given locator.
-    - is_displayed: Checks if an element identified by the given locator is displayed.
-    - is_not_displayed: Checks if an element identified by the given locator is not displayed.
-    - get_text: Retrieves the text content of an element identified by the given locator.
-    - get_numeric_price_value: Retrieves the numeric value of a price element identified by the given locator.
-    - get_placeholder: Retrieves the placeholder value of an element identified by the given locator.
-    - get_element: Retrieves an element identified by the specified method (By) and value.
-    - get_element_by_locator: Retrieves an element identified by the given locator.
-    - get_element_data_item_qty: Retrieves the 'data-item-qty' attribute value of an element identified by the given locator.
-    - get_element_style: Retrieves the 'style' attribute value of an element identified by the given locator.
-    - click_via_js: Clicks on an element using JavaScript to ensure it is visible and clickable.
-    - scroll_via_js: Scrolls the page down by 500 pixels using JavaScript.
-    - move_cursor_to_element: Moves the cursor to an element identified by the given locator using ActionChains.
 
     """
     def __init__(self, driver):
@@ -104,6 +83,9 @@ class BasePage:
         - locator: A tuple representing the locator strategy and value.
         - value: The text to be entered.
         - is_clear: Whether to clear the existing text in the input field before entering new text (default is True).
+
+        Returns:
+        - None
         """
         element = self.__wait_until_element_visible(locator)
         if is_clear:
@@ -114,6 +96,9 @@ class BasePage:
     def press_enter(self):
         """
         Presses the 'Enter' key on the active element.
+
+        Returns:
+        - self
         """
         self._driver.switch_to.active_element.send_keys(Keys.ENTER)
         return self
@@ -121,6 +106,9 @@ class BasePage:
     def press_backspace(self):
         """
         Presses the 'Backspace' key on the active element.
+
+        Returns:
+        - self
         """
         self._driver.switch_to.active_element.send_keys(Keys.BACK_SPACE)
         return self
@@ -131,6 +119,9 @@ class BasePage:
 
         Parameters:
         - locator: A tuple representing the locator strategy and value.
+
+        Returns:
+        - None
         """
         self.__wait_until_element_clickable(locator).click()
 
@@ -268,6 +259,10 @@ class BasePage:
         Parameters:
         - locator: A tuple representing the locator strategy and value.
         - timeout: Maximum time to wait for the element to become clickable (in seconds).
+
+        Returns:
+        - None
+
         """
         try:
             element = self.__wait_until_element_clickable(locator)
@@ -281,6 +276,9 @@ class BasePage:
     def scroll_via_js(self):
         """
         Scrolls the page down by 500 pixels using JavaScript.
+
+        Returns:
+        - None
         """
         self._driver.execute_script("window.scrollBy(0, 500);")
 
@@ -301,4 +299,30 @@ class BasePage:
         actions = ActionChains(self._driver)
         actions.move_to_element(element).perform()
 
+    def wait_for_element_clickable_and_click(self, locator):
+        """
+           Waits for an element to be clickable and then clicks it.
 
+           Parameters:
+           - locator: A tuple representing the locator strategy and value.
+
+           Raises:
+           - ElementClickInterceptedException: If the element is not clickable after the maximum number of retries.
+
+           Returns:
+           - None
+           """
+        max_retries = 15
+        retries = 0
+
+        while retries < max_retries:
+            try:
+                element = self.__wait_until_element_clickable(locator)
+                element.click()
+                break
+            except ElementClickInterceptedException:
+                retries += 1
+                time.sleep(2)
+
+        if retries == max_retries:
+            raise ElementClickInterceptedException("Exceeded maximum retry attempts for ElementClickInterceptedException")

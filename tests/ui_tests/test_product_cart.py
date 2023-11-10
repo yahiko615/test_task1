@@ -7,9 +7,11 @@ from page_objects.main_page_pack.main_page import MainPage
 
 @allure.feature('Product Cart Feature')
 # @pytest.mark.headless
-# сделал тест флаки потому что пришлось добавить time.sleep-ы из-за трудноотслеживаемого лоадинга
-# который без time.sleep-ов вызывает ElementClickInterceptedException
-@flaky(max_runs=3, min_passes=1)
+# Made the test flaky because I had to add time.sleeps due to hard-to-track loading
+# that, without time.sleeps, triggers ElementClickInterceptedException.
+# (I wrote a function that catches this exception and retries the click until it disappears) but it still
+# have some issues
+# @flaky(max_runs=3, min_passes=1)
 def test_adding_product_to_cart_valid_data(create_driver_product_cart, env):
     """
     Test case to validate the process of adding a product to the cart with valid data.
@@ -59,17 +61,20 @@ def test_adding_product_to_cart_valid_data(create_driver_product_cart, env):
     checkout_page = product_case.click_make_order()
 
     # Step 7: Verify checkout page
-    assert checkout_page.verify_checkout_page_opened(), "Checkout page isn't shown"
-    assert checkout_page.verify_new_user_tab_active(), "New user tab isn't active"
+    assert checkout_page.is_checkout_page_opened(), "Checkout page isn't shown"
+    assert checkout_page.is_new_user_tab_active(), "New user tab isn't active"
 
     # Step 8: Provide user details and select options
     town_name = 'Київ'
-    issuing_office_name = 'Відділення №180 (до 30 кг): просп. Степана Бандери, 8'
+    issuing_office_name = 'Відділення №180 (до 30 кг): просп. Степ'
     comment = 'Test order'
-    checkout_page.set_valid_user_creds(env["valid_name"], env["valid_surname"], env["valid_phone_number"],
-                                       env["valid_email"])
+    checkout_page.set_user_creds(env["valid_name"], env["valid_surname"], env["valid_phone_number"],
+                                 env["valid_email"])
     checkout_page.set_town(town_name).select_town_option().set_delivery_method() \
         .set_issuing_office(issuing_office_name).check_payment_method()
 
     # Step 9: Add comment to the order
     checkout_page.click_add_comment().set_comment(comment)
+    # The test case does not specify what needs to be verified for order checkout in reality(at te end),
+    # so I am simply checking if the page is open.
+    assert checkout_page.is_checkout_page_opened(), "Checkout page isn't shown"

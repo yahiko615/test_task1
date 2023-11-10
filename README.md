@@ -13,7 +13,7 @@ git clone https://github.com/yahiko615/test_task1
 
 2. Install the dependencies:
 
-pip install requirements.txt
+pip install -r requirements.txt
 
 3. Run the project:
 

@@ -1,11 +1,11 @@
 from selenium.webdriver.common.by import By
 
-from conftest import auto_step
+from utilities.auto_step.auto_step import autostep
 from page_objects.product_page_pack.product_page import ProductPage
 from utilities.ui_utilities.base_page import BasePage
 
 
-@auto_step
+@autostep
 class MainPage(BasePage):
     """
        Page Object class representing the main page of the application.
@@ -14,15 +14,6 @@ class MainPage(BasePage):
 
        Attributes:
        - driver: The WebDriver instance for interacting with the web page.
-
-       Locators:
-       - __input_search: Locator for the search input field.
-       - __search_result_locator: Locator for a specific search result link.
-
-       Methods:
-       - __init__: Constructor method to initialize the MainPage instance.
-       - set_search_text: Enters the specified text into the search input field.
-       - click_search_result: Clicks on a specific search result link, returning a 'ProductPage' instance for further interaction.
 
        Example:
        main_page = MainPage(driver)

@@ -1,11 +1,11 @@
 from selenium.webdriver.common.by import By
 
-from conftest import auto_step
+from utilities.auto_step.auto_step import autostep
 from page_objects.checkout_page_pack.checkout_page import CheckoutPage
 from utilities.ui_utilities.base_page import BasePage
 
 
-@auto_step
+@autostep
 class ProductPage(BasePage):
     """
         Page Object class representing the product page of the application.
@@ -15,26 +15,6 @@ class ProductPage(BasePage):
         Attributes:
         - driver: The WebDriver instance for interacting with the web page.
 
-        Locators:
-        - __ready_to_dispatch_span: Locator for the span indicating that the product is ready to dispatch.
-        - __quantity_input: Locator for the quantity input field on the product page.
-        - __buy_product_button: Locator for the "Buy" button on the product page.
-        - __minicart_window: Locator for the minicart window on the page.
-        - __quantity_in_minicart: Locator for the quantity field in the minicart.
-        - __product_price_on_minicart: Locator for the product price in the minicart.
-        - __minicart_make_an_order_button: Locator for the "Make an Order" button in the minicart.
-        - __checkout_page_title: Locator for the title of the checkout page.
-        - __name_of_the_product: Locator for the name of the product on the checkout page.
-
-        Methods:
-        - __init__: Constructor method to initialize the ProductPage instance.
-        - verify_product_status_is_ready_to_dispatch: Verifies if the product is ready to dispatch.
-        - set_quantity: Sets the quantity of the product on the page.
-        - click_buy_product: Clicks on the "Buy" button to add the product to the cart.
-        - verify_minicart_window_is_open: Verifies if the minicart window is open.
-        - verify_minicart_quantity_value: Verifies the quantity value in the minicart.
-        - get_product_price_on_minicart: Gets the product price from the minicart.
-        - click_make_order: Clicks on the "Make an Order" button in the minicart and navigates to the checkout page.
 
         Example:
         product_page = ProductPage(driver)
