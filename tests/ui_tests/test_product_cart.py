@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import allure
-
+from flaky import flaky
 from page_objects.main_page_pack.main_page import MainPage
 
 
 @allure.feature('Product Cart Feature')
 # @pytest.mark.headless
+# сделал тест флаки потому что пришлось добавить time.sleep-ы из-за трудноотслеживаемого лоадинга
+# который без вейтеров вызывает ElementClickInterceptedException
+@flaky(max_runs=3, min_passes=1)
 def test_adding_product_to_cart_valid_data(create_driver_product_cart, env):
     """
     Test case to validate the process of adding a product to the cart with valid data.
@@ -27,8 +30,8 @@ def test_adding_product_to_cart_valid_data(create_driver_product_cart, env):
     - create_driver_product_cart: Pytest fixture to create a WebDriver for the test.
     - env: Pytest fixture providing environment configuration data.
 
-    Returns:
-    - None
+    Expected result:
+    - Product added to the cart.
     """
     driver = create_driver_product_cart
 

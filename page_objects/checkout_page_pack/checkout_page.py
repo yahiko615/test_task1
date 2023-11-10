@@ -119,10 +119,12 @@ class CheckoutPage(BasePage):
         Returns:
         - self: The current instance for method chaining.
         """
-        self.send_keys(self.__name_input, name)
-        self.send_keys(self.__surname_input, surname)
-        self.send_keys(self.__telephone_input, phone_number)
-        self.send_keys(self.__email_input, email)
+        fields = [self.__name_input, self.__surname_input, self.__telephone_input, self.__email_input]
+        values = [name, surname, phone_number, email]
+
+        for field, value in zip(fields, values):
+            self.send_keys(field, value)
+
         time.sleep(5)
         return self
 
@@ -223,5 +225,4 @@ class CheckoutPage(BasePage):
         - self: The current instance for method chaining.
         """
         self.send_keys(self.__comment_textarea, name)
-        time.sleep(5)
         return self

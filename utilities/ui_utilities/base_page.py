@@ -1,4 +1,4 @@
-from selenium.common import TimeoutException
+from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
@@ -261,16 +261,22 @@ class BasePage:
         style = element.get_attribute("style")
         return style
 
-    def click_via_js(self, locator):
+    def click_via_js(self, locator, timeout=10):
         """
         Clicks on an element using JavaScript to ensure it is visible and clickable.
 
         Parameters:
         - locator: A tuple representing the locator strategy and value.
+        - timeout: Maximum time to wait for the element to become clickable (in seconds).
         """
-        element = self.__wait_until_element_clickable(locator)
-        self._driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        element.click()
+        try:
+            element = self.__wait_until_element_clickable(locator)
+            self._driver.execute_script("arguments[0].scrollIntoView(true);", element)
+            element.click()
+        except NoSuchElementException:
+            raise NoSuchElementException(f"Element located by {locator} is not visible or not found.")
+        except TimeoutException:
+            raise TimeoutException(f"Element located by {locator} was not clickable within {timeout} seconds.")
 
     def scroll_via_js(self):
         """
