@@ -11,7 +11,7 @@ from page_objects.main_page_pack.main_page import MainPage
 # that, without time.sleeps, triggers ElementClickInterceptedException.
 # (I wrote a function that catches this exception and retries the click until it disappears) but it still
 # have some issues
-# @flaky(max_runs=3, min_passes=1)
+@flaky(max_runs=3, min_passes=1)
 def test_adding_product_to_cart_valid_data(create_driver_product_cart, env):
     """
     Test case to validate the process of adding a product to the cart with valid data.
